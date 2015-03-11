@@ -1,0 +1,8 @@
+R:\Euler\Euler\bin\Debug\Euler.exe
+R:\Euler\Euler\bin\Debug\Euler.pdb
+R:\Euler\Euler\obj\x86\Debug\Euler.Form1.resources
+R:\Euler\Euler\obj\x86\Debug\Euler.Properties.Resources.resources
+R:\Euler\Euler\obj\x86\Debug\Euler.csproj.GenerateResource.Cache
+R:\Euler\Euler\obj\x86\Debug\Euler.exe
+R:\Euler\Euler\obj\x86\Debug\Euler.pdb
+R:\Euler\Euler\obj\x86\Debug\Euler.csprojResolveAssemblyReference.cache
