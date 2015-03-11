@@ -6,3 +6,11 @@ R:\Euler\Euler\obj\x86\Debug\Euler.csproj.GenerateResource.Cache
 R:\Euler\Euler\obj\x86\Debug\Euler.exe
 R:\Euler\Euler\obj\x86\Debug\Euler.pdb
 R:\Euler\Euler\obj\x86\Debug\Euler.csprojResolveAssemblyReference.cache
+C:\Users\Dan\Documents\Euler2.0\Euler2.0\Euler\obj\x86\Debug\Euler.exe
+C:\Users\Dan\Documents\Euler2.0\Euler2.0\Euler\obj\x86\Debug\Euler.pdb
+C:\Users\Dan\Documents\Euler2.0\Euler2.0\Euler\bin\Debug\Euler.exe
+C:\Users\Dan\Documents\Euler2.0\Euler2.0\Euler\bin\Debug\Euler.pdb
+C:\Users\Dan\Documents\Euler2.0\Euler2.0\Euler\obj\x86\Debug\Euler.csprojResolveAssemblyReference.cache
+C:\Users\Dan\Documents\Euler2.0\Euler2.0\Euler\obj\x86\Debug\Euler.Properties.Resources.resources
+C:\Users\Dan\Documents\Euler2.0\Euler2.0\Euler\obj\x86\Debug\Euler.csproj.GenerateResource.Cache
+C:\Users\Dan\Documents\Euler2.0\Euler2.0\Euler\obj\x86\Debug\Euler.MainForm.resources

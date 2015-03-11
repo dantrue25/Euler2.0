@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace Euler
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             pictureBox1.MouseDown += new MouseEventHandler(pictureBox1_MouseDown);
@@ -111,7 +111,10 @@ namespace Euler
                                 richTextBox1.Text = graph.adjacencyMatrixStringBasic();
                             }
                             else
+                            {
                                 selected = null;
+                                printGraph();
+                            }
                         }
                         else
                         {

@@ -197,10 +197,10 @@ namespace Euler
                 {
                     output += "" + adj[i, j] + " ";
                 }
-                output.TrimEnd();
+                output = output.Substring(0, output.Length - 1);
                 output += "\n";
             }
-
+            output = output.Substring(0, output.Length - 1);
             return output;
         }
     }
