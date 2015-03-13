@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace Euler
 {
@@ -37,7 +39,7 @@ namespace Euler
             {
                 if (parent.getVertex(value) != null && parent.getVertex(value) != this)
                 {
-                    System.Windows.Forms.MessageBox.Show("Invalid name: " + value + " is already used in the current graph.");
+                    System.Windows.Forms.MessageBox.Show("Invalid name : \n" + value + " is the name of a vertex already in the current graph.");
                 }
                 else
                     name = value;
@@ -92,16 +94,17 @@ namespace Euler
         public Color Color { get; set; }
         public int Radius { get; set; }
 
-        public List<Vertex> Neighbors { 
+        public ReadOnlyCollection<Vertex> Neighbors { 
             get
             {
-                return neighbors;                
+                return neighbors.AsReadOnly();           
             }
         }
 
         public void addNeighbor(Vertex v)
         {
-            neighbors.Add(v);
+            if(!neighbors.Contains(v))
+                neighbors.Add(v);
         }
 
         public void removeNeighbor(Vertex v)

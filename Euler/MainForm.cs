@@ -153,6 +153,8 @@ namespace Euler
             {
                 foreach (Vertex n in v.Neighbors)
                 {
+                    if (v.Equals(n))
+                        graphics.DrawEllipse(Pens.Black, (int) (v.X - 2.8 * v.Radius), (int) (v.Y - 2.8 * v.Radius), 3 * v.Radius, 3 * v.Radius); 
                     graphics.DrawLine(Pens.Black, v.Location, n.Location);
                 }
             }

@@ -352,8 +352,8 @@
             // toolTip1
             // 
             this.toolTip1.AutoPopDelay = 50000;
-            this.toolTip1.InitialDelay = 50;
-            this.toolTip1.ReshowDelay = 100;
+            this.toolTip1.InitialDelay = 200;
+            this.toolTip1.ReshowDelay = 200;
             // 
             // MainForm
             // 

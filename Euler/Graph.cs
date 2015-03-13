@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Collections.ObjectModel;
 
 namespace Euler
 {
@@ -57,11 +58,11 @@ namespace Euler
             }
         }
 
-        public List<Vertex> Vertices
+        public ReadOnlyCollection<Vertex> Vertices
         {
             get
             {
-                return vertices;
+                return vertices.AsReadOnly();
             }
         }
 
@@ -81,7 +82,7 @@ namespace Euler
         public void removeVertex(Vertex v)
         {
             foreach (Vertex possibleNeighbor in vertices)
-                possibleNeighbor.Neighbors.Remove(v);
+                possibleNeighbor.removeNeighbor(v);
                 
             this.vertices.Remove(v);
         }
