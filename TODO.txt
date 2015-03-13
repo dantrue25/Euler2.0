@@ -1,0 +1,22 @@
+
+TODO:
+
+save/open
+move vertex mode
+
+adjacency matrix
+	-powers
+	-various outputs
+	-image
+	-copy/paste
+
+eigen vector/value
+	-calculate and fix problem
+	-image
+	-copy/paste
+	-form to view
+	-various outputs
+
+graph
+	-copy/paste
+	-export as image
