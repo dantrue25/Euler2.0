@@ -72,7 +72,10 @@ namespace Euler
 
         public void addVertex(Vertex v)
         {
-            this.vertices.Add(v);
+            if(enoughRoom(v))
+                this.vertices.Add(v);
+            else
+                MessageBox.Show("Not enough room for Vertex: " + v.Name + " at location (" + v.X + ", " + v.Y + ")");
         }
 
         public void removeVertex(Vertex v)
@@ -123,6 +126,21 @@ namespace Euler
             Boolean room = true;
 
             Point clickPoint = new Point(x, y);
+
+            foreach (Vertex v in vertices)
+            {
+                if (distanceBetween(v.Location, clickPoint) < (v.Radius + defaultVertexSize + 4))
+                    return false;
+            }
+
+            return room;
+        }
+
+        public Boolean enoughRoom(Vertex check)
+        {
+            Boolean room = true;
+
+            Point clickPoint = check.Location;
 
             foreach (Vertex v in vertices)
             {
