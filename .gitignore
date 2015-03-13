@@ -194,3 +194,7 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+# bin and obj files (added by Dan True **3/13/2015)
+bin/*
+obj/*

@@ -37,7 +37,7 @@ namespace Euler
             {
                 if (parent.getVertex(value) != null && parent.getVertex(value) != this)
                 {
-                    System.Windows.Forms.MessageBox.Show("Cannot use name. Name is already used in the current graph.");
+                    System.Windows.Forms.MessageBox.Show("Name is already used in the current graph.");
                 }
                 else
                     name = value;
