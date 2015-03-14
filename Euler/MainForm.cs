@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -24,7 +25,7 @@ namespace Euler
             editMode = 0;
             printGraph();
 
-            graphCursor = Cursors.Hand;
+            graphCursor = Cursors.Arrow;
             label2.Text = "Properties for Graph";
             propertyGrid1.SelectedObject = graph;
             toolStripStatusLabel1.Text = "Ready";
@@ -69,7 +70,7 @@ namespace Euler
                 toolTip1.Active = false;
                 if (graph.enoughRoomExcludingSelected(e.X, e.Y, selected))
                 {
-                    //Cursor = Cursors.
+                    Cursor = Cursors.SizeAll;
                     selected.Location = new Point(e.X, e.Y);
                 }
                 else
@@ -90,6 +91,12 @@ namespace Euler
                 }
                 else
                     toolTip1.Active = false;
+            }
+
+            if (editMode == 2)
+            {
+                if (graph.getVertex(e.X, e.Y) != null)
+                    Cursor = Cursors.Cross;
             }
         }
 
@@ -198,6 +205,7 @@ namespace Euler
         {
             graphImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             graphics = Graphics.FromImage(graphImage);
+            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             graphics.Clear(graph.BackgroundColor);
             graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
 
@@ -218,8 +226,8 @@ namespace Euler
                 graphics.FillEllipse(new SolidBrush(v.Color), v.X - v.Radius, v.Y - v.Radius, v.Radius * 2, v.Radius * 2);
             }
 
-            if(graph.NumberOfVertices > 1)
-                graphics.DrawRectangle(Pens.Black, graph.imageDomain());
+            //if(graph.NumberOfVertices > 1)
+            //    graphics.DrawRectangle(Pens.Black, graph.imageDomain());
 
             pictureBox1.Image = graphImage;
         }
@@ -244,9 +252,21 @@ namespace Euler
         private int editMode;
         private Cursor graphCursor;
 
+        private void showButtonInUse(ToolStripButton b)
+        {
+            b.BackColor = Color.LightBlue;
+            foreach (ToolStripButton tsb in toolStrip1.Items)
+            {
+                if (tsb != b)
+                {
+                    tsb.BackColor = SystemColors.Control;
+                }
+            }
+        }
+
         private void toolStripButtonSelect_Click(object sender, EventArgs e)
         {
-            graphCursor = Cursors.Hand;
+            graphCursor = Cursors.Arrow;
             showButtonInUse(toolStripButtonSelect);
             toolStripStatusLabel1.Text = "Ready";
             editMode = 0;
@@ -260,18 +280,6 @@ namespace Euler
             editMode = 1;
         }
 
-        private void showButtonInUse(ToolStripButton b)
-        {
-            b.BackColor = Color.LightBlue;
-            foreach (ToolStripButton tsb in toolStrip1.Items)
-            {
-                if (tsb != b)
-                {
-                    tsb.BackColor = SystemColors.Control;
-                }
-            }
-        }
-
         private void toolStripButtonDeleteVertex_Click(object sender, EventArgs e)
         {
             if (selected != null)
@@ -283,7 +291,7 @@ namespace Euler
 
         private void toolStripButtonAddEdge_Click(object sender, EventArgs e)
         {
-            graphCursor = Cursors.Hand;
+            graphCursor = Cursors.Arrow;
             selected = null;
             showButtonInUse(toolStripButtonAddEdge);
             toolStripStatusLabel1.Text = "Add edge: Click on the vertex that you want to add an edge to.";
@@ -297,6 +305,47 @@ namespace Euler
             showButtonInUse(toolStripButtonDeleteEdge);
             toolStripStatusLabel1.Text = "Delete edge: Click on the vertex you want to remove the edge from.";
             editMode = 3;
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<String> fileList = new List<String>();
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Euler Graph Files|*.egf";
+            saveDialog.OverwritePrompt = true;
+            DialogResult result = saveDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                String fileName = saveDialog.FileName;
+            }
+
+            /*
+            if (result == DialogResult.OK)
+            {
+                String fileName = saveDialog.FileName;
+                
+                foreach (Vertex v in graph.Vertices)
+                {
+                    // General vertex info
+                    fileList.Add(v.X.ToString());
+                    fileList.Add(v.Y.ToString());
+                    fileList.Add(v.Name);
+                    fileList.Add(v.Radius.ToString());
+                    fileList.Add(v.Color.ToArgb().ToString());
+
+                    // Add all neighbors
+                    foreach (Vertex n in v.Neighbors)
+                    {
+                        fileList.Add(v.Name);
+                    }
+                    fileList.Add("+");
+                }
+
+                String[] lines = fileList.ToArray();
+                System.IO.File.WriteAllLines(@filename, lines);
+            }
+            */
         }
     }
 }

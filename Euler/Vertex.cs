@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace Euler
 {
-    
+    [Serializable]
     public class Vertex
     {
         private List<Vertex> neighbors;
@@ -55,7 +55,7 @@ namespace Euler
             set
             {
                 if (parent.enoughRoomExcludingSelected(value, this.y, this))
-                    this.x = value;
+                    this.x = Math.Max(0, value);
                 else
                     MessageBox.Show("Too close to another vertex");
             }
@@ -70,7 +70,7 @@ namespace Euler
             set
             {
                 if (parent.enoughRoomExcludingSelected(this.x, value, this))
-                    this.y = value;
+                    this.y = Math.Max(0, value);
                 else
                     MessageBox.Show("Too close to another vertex");
             }
@@ -87,8 +87,8 @@ namespace Euler
             {
                 if(parent.enoughRoomExcludingSelected(value.X, value.Y, this))
                 {
-                    this.x = value.X;
-                    this.y = value.Y;
+                    this.x = Math.Max(0, value.X);
+                    this.y = Math.Max(0, value.Y);
                 }
             }
         }

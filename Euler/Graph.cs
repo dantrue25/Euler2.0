@@ -9,6 +9,7 @@ using System.ComponentModel;
 
 namespace Euler
 {
+    [Serializable]
     public class Graph
     {
         private List<Vertex> vertices;
