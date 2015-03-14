@@ -69,6 +69,7 @@ namespace Euler
                 toolTip1.Active = false;
                 if (graph.enoughRoomExcludingSelected(e.X, e.Y, selected))
                 {
+                    //Cursor = Cursors.
                     selected.Location = new Point(e.X, e.Y);
                 }
                 else
@@ -105,6 +106,8 @@ namespace Euler
                 {
                     case (0):
                         selected = graph.getVertex(e.X, e.Y);
+                        if(selected != null)
+                            Cursor.Position = pictureBox1.PointToScreen(selected.Location);
                         printGraph();
                         break;
                     case (1):
@@ -117,7 +120,13 @@ namespace Euler
                         printGraph();
                         break;
                     case (2):
-                        if (selected != null)
+                        if (selected == null)
+                        {
+                            selected = graph.getVertex(e.X, e.Y);
+                            toolStripStatusLabel1.Text = "Add edge: Now click on the vertex you wish to add as a neighbor.";
+                            printGraph();
+                        }
+                        else
                         {
                             Vertex secondVertex = graph.getVertex(e.X, e.Y);
                             if (secondVertex != null)
@@ -133,11 +142,33 @@ namespace Euler
                                 selected = null;
                                 printGraph();
                             }
+                            toolStripStatusLabel1.Text = "Add edge: Click on the vertex that you want to add an edge to.";
+                        }
+                        break;
+                    case (3):
+                        if (selected == null)
+                        {
+                            selected = graph.getVertex(e.X, e.Y);
+                            toolStripStatusLabel1.Text = "Delete edge: Now click on the vertex you wish to remove as a neighbor.";
+                            printGraph();
                         }
                         else
                         {
-                            selected = graph.getVertex(e.X, e.Y);
-                            printGraph();
+                            Vertex secondVertex = graph.getVertex(e.X, e.Y);
+                            if (secondVertex != null)
+                            {
+                                selected.removeNeighbor(secondVertex);
+                                secondVertex.removeNeighbor(selected);
+                                selected = null;
+                                printGraph();
+                                richTextBox1.Text = graph.adjacencyMatrixStringBasic();
+                            }
+                            else
+                            {
+                                selected = null;
+                                printGraph();
+                            }
+                            toolStripStatusLabel1.Text = "Delete edge: Click on the vertex you want to remove the edge from.";
                         }
                         break;
                     default:
@@ -187,6 +218,8 @@ namespace Euler
                 graphics.FillEllipse(new SolidBrush(v.Color), v.X - v.Radius, v.Y - v.Radius, v.Radius * 2, v.Radius * 2);
             }
 
+            if(graph.NumberOfVertices > 1)
+                graphics.DrawRectangle(Pens.Black, graph.imageDomain());
             pictureBox1.Image = graphImage;
         }
 
@@ -252,8 +285,17 @@ namespace Euler
             graphCursor = Cursors.Hand;
             selected = null;
             showButtonInUse(toolStripButtonAddEdge);
-            toolStripStatusLabel1.Text = "Click first vertex that you want to add an edge to";
+            toolStripStatusLabel1.Text = "Add edge: Click on the vertex that you want to add an edge to.";
             editMode = 2;
+        }
+
+        private void toolStripButtonDeleteEdge_Click(object sender, EventArgs e)
+        {
+            graphCursor = Cursors.Arrow;
+            selected = null;
+            showButtonInUse(toolStripButtonDeleteEdge);
+            toolStripStatusLabel1.Text = "Delete edge: Click on the vertex you want to remove the edge from.";
+            editMode = 3;
         }
     }
 }

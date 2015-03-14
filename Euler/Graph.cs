@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace Euler
 {
@@ -160,7 +161,7 @@ namespace Euler
 
             foreach (Vertex v in vertices)
             {
-                if (!selected.Equals(v) && distanceBetween(v.Location, clickPoint) < (v.Radius + defaultVertexSize + 4))
+                if (!selected.Equals(v) && distanceBetween(v.Location, clickPoint) < (v.Radius + selected.Radius + 4))
                     return false;
             }
 
@@ -204,6 +205,7 @@ namespace Euler
             return dist;
         }
 
+        [Browsable(false)]
         public int[,] AdjacencyMatrix
         {
             get
@@ -236,6 +238,33 @@ namespace Euler
             }
             output = output.Substring(0, output.Length - 1);
             return output;
+        }
+
+        public Rectangle imageDomain()
+        {
+            Rectangle domain;
+
+            int leftMost = vertices.ElementAt(0).X - vertices.ElementAt(0).Radius;
+            int rightMost = vertices.ElementAt(0).X + vertices.ElementAt(0).Radius;
+            int topMost = vertices.ElementAt(0).Y - vertices.ElementAt(0).Radius;
+            int bottomMost = vertices.ElementAt(0).Y + vertices.ElementAt(0).Radius;
+
+            foreach (Vertex v in vertices)
+            {
+                if (v.X - v.Radius < leftMost)
+                    leftMost = v.X - v.Radius;
+                else if (v.X + v.Radius > rightMost)
+                    rightMost = v.X + v.Radius;
+
+                if (v.Y - v.Radius < topMost)
+                    topMost = v.Y - v.Radius;
+                else if (v.Y + v.Radius > bottomMost)
+                    bottomMost = v.Y + v.Radius;
+            }
+
+            domain = new Rectangle(new Point(leftMost, topMost), new Size(rightMost - leftMost, bottomMost - topMost));
+
+            return domain;
         }
     }
 }

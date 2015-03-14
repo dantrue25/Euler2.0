@@ -85,7 +85,7 @@
             this.analysisToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1007, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1065, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -111,7 +111,7 @@
             this.toolStripButtonDeleteEdge});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1007, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1065, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -158,6 +158,7 @@
             this.toolStripButtonDeleteEdge.Name = "toolStripButtonDeleteEdge";
             this.toolStripButtonDeleteEdge.Size = new System.Drawing.Size(89, 22);
             this.toolStripButtonDeleteEdge.Text = "Delete Edge";
+            this.toolStripButtonDeleteEdge.Click += new System.EventHandler(this.toolStripButtonDeleteEdge_Click);
             // 
             // splitContainer1
             // 
@@ -174,8 +175,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1007, 467);
-            this.splitContainer1.SplitterDistance = 727;
+            this.splitContainer1.Size = new System.Drawing.Size(1065, 615);
+            this.splitContainer1.SplitterDistance = 785;
             this.splitContainer1.TabIndex = 3;
             this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
@@ -186,7 +187,7 @@
             this.pictureBox1.MaximumSize = new System.Drawing.Size(15000, 15000);
             this.pictureBox1.MinimumSize = new System.Drawing.Size(1, 1);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(723, 463);
+            this.pictureBox1.Size = new System.Drawing.Size(781, 611);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -207,8 +208,8 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.panel2);
             this.splitContainer2.Panel2.Controls.Add(this.panel1);
-            this.splitContainer2.Size = new System.Drawing.Size(276, 467);
-            this.splitContainer2.SplitterDistance = 205;
+            this.splitContainer2.Size = new System.Drawing.Size(276, 615);
+            this.splitContainer2.SplitterDistance = 354;
             this.splitContainer2.TabIndex = 0;
             // 
             // propertyGrid1
@@ -216,7 +217,7 @@
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid1.Location = new System.Drawing.Point(0, 25);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(272, 176);
+            this.propertyGrid1.Size = new System.Drawing.Size(272, 325);
             this.propertyGrid1.TabIndex = 0;
             // 
             // panel3
@@ -244,7 +245,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 23);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(272, 231);
+            this.panel2.Size = new System.Drawing.Size(272, 230);
             this.panel2.TabIndex = 1;
             // 
             // tabControl1
@@ -255,7 +256,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(272, 231);
+            this.tabControl1.Size = new System.Drawing.Size(272, 230);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -264,7 +265,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(264, 205);
+            this.tabPage1.Size = new System.Drawing.Size(264, 204);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -274,7 +275,7 @@
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Location = new System.Drawing.Point(3, 3);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(258, 199);
+            this.richTextBox1.Size = new System.Drawing.Size(258, 198);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             this.richTextBox1.WordWrap = false;
@@ -325,9 +326,9 @@
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2,
             this.toolStripStatusLabel3});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 516);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 664);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1007, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1065, 22);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -359,7 +360,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1007, 538);
+            this.ClientSize = new System.Drawing.Size(1065, 686);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
