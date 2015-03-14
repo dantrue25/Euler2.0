@@ -152,6 +152,21 @@ namespace Euler
             return room;
         }
 
+        public Boolean enoughRoomExcludingSelected(int x, int y, Vertex selected)
+        {
+            Boolean room = true;
+
+            Point clickPoint = new Point(x, y);
+
+            foreach (Vertex v in vertices)
+            {
+                if (!selected.Equals(v) && distanceBetween(v.Location, clickPoint) < (v.Radius + defaultVertexSize + 4))
+                    return false;
+            }
+
+            return room;
+        }
+
         public Color BackgroundColor
         {
             get

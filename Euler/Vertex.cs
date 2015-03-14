@@ -54,14 +54,10 @@ namespace Euler
             }
             set
             {
-                parent.removeVertex(this);
-                
-                if (parent.enoughRoom(value, this.y))
+                if (parent.enoughRoomExcludingSelected(value, this.y, this))
                     this.x = value;
                 else
                     MessageBox.Show("Too close to another vertex");
-                
-                parent.addVertex(this);
             }
         }
         
@@ -73,14 +69,10 @@ namespace Euler
             }
             set
             {
-                parent.removeVertex(this);
-
-                if (parent.enoughRoom(this.x, value))
+                if (parent.enoughRoomExcludingSelected(this.x, value, this))
                     this.y = value;
                 else
                     MessageBox.Show("Too close to another vertex");
-
-                parent.addVertex(this);
             }
         }
 
@@ -89,6 +81,15 @@ namespace Euler
             get
             {
                 return new Point(this.x, this.y);
+            }
+
+            set
+            {
+                if(parent.enoughRoomExcludingSelected(value.X, value.Y, this))
+                {
+                    this.x = value.X;
+                    this.y = value.Y;
+                }
             }
         }
         public Color Color { get; set; }

@@ -30,7 +30,7 @@ namespace Euler
             toolStripStatusLabel1.Text = "Ready";
             toolStripStatusLabel3.Text = "";
             showButtonInUse(toolStripButtonSelect);
-            toolTip1.Active = false;
+            toolTip1.Active = true;
         }
 
         void pictureBox1_MouseEnter(object sender, EventArgs e)
@@ -59,15 +59,33 @@ namespace Euler
             }
             else
                 Cursor = graphCursor;
-            
-            
-            if(editMode == 0 || editMode == 2)
+
+            if (editMode == 0 
+                && e.Button == MouseButtons.Left 
+                && selected != null 
+                && e.X > 0 && e.X < pictureBox1.Width 
+                && e.Y > 0 && e.Y < pictureBox1.Height)
+            {
+                toolTip1.Active = false;
+                if (graph.enoughRoomExcludingSelected(e.X, e.Y, selected))
+                {
+                    selected.Location = new Point(e.X, e.Y);
+                }
+                else
+                    Cursor = Cursors.No;
+                printGraph();
+            }
+            else if (editMode == 0 || editMode == 2 && e.Button != MouseButtons.Left && e.X > 0 && e.X < pictureBox1.Width && e.Y > 0 && e.Y < pictureBox1.Height)
             {
                 Vertex v = graph.getVertex(e.X, e.Y);
                 if (v != null)
                 {
-                    toolTip1.Active = true;
-                    toolTip1.Show(v.Name, pictureBox1);
+                    if (!toolTip1.Active)
+                    {                        
+                        toolTip1.Show(v.Name, pictureBox1, v.Location.X, v.Location.Y - 30);
+                        toolTip1.Active = true;
+                        toolTip1.Show(v.Name, pictureBox1, v.Location.X, v.Location.Y - 30);
+                    }
                 }
                 else
                     toolTip1.Active = false;
@@ -127,12 +145,15 @@ namespace Euler
                 }
             }
             
-            propertyGrid1.SelectedObject = graph;
-            label2.Text = "Properties for Graph";
             if (selected != null)
             {
                 label2.Text = "Properties for " + selected.Name;
                 propertyGrid1.SelectedObject = selected;
+            }
+            else
+            {
+                propertyGrid1.SelectedObject = graph;
+                label2.Text = "Properties for Graph";
             }
         }
 

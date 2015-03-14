@@ -2,7 +2,6 @@
 TODO:
 
 save/open
-move vertex mode
 make graph vertices expandable in propgrid
 make vertex neighbors expandable in propgrid
 
