@@ -220,6 +220,7 @@ namespace Euler
 
             if(graph.NumberOfVertices > 1)
                 graphics.DrawRectangle(Pens.Black, graph.imageDomain());
+
             pictureBox1.Image = graphImage;
         }
 

@@ -242,6 +242,9 @@ namespace Euler
 
         public Rectangle imageDomain()
         {
+            if (vertices.Count == 0)
+                return new Rectangle(new Point(0, 0), new Size(10, 10));
+
             Rectangle domain;
 
             int leftMost = vertices.ElementAt(0).X - vertices.ElementAt(0).Radius;
