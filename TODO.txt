@@ -1,16 +1,12 @@
 
 TODO:
 
-save/open
 make graph vertices expandable in propgrid
 make vertex neighbors expandable in propgrid
 
-propgrid - changing default size of vertices
-	-"Do you want to change all existing vertices sizes to this?" Yes, No
 
 adjacency matrix
 	-powers
-	-various outputs
 	-image
 	-copy/paste
 

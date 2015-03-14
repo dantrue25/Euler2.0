@@ -19,6 +19,7 @@ namespace Euler
             pictureBox1.MouseMove += new MouseEventHandler(pictureBox1_MouseMove);
             pictureBox1.MouseLeave += new EventHandler(pictureBox1_MouseLeave);
             pictureBox1.MouseEnter += new EventHandler(pictureBox1_MouseEnter);
+            pictureBox1.MouseUp += pictureBox1_MouseUp;
             propertyGrid1.PropertyValueChanged += new PropertyValueChangedEventHandler(propertyGrid1_PropertyValueChanged);
             
             graph = new Graph();
@@ -32,6 +33,11 @@ namespace Euler
             toolStripStatusLabel3.Text = "";
             showButtonInUse(toolStripButtonSelect);
             toolTip1.Active = true;
+        }
+
+        void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            propertyGrid1.Refresh();
         }
 
         void pictureBox1_MouseEnter(object sender, EventArgs e)
@@ -63,9 +69,9 @@ namespace Euler
 
             if (editMode == 0 
                 && e.Button == MouseButtons.Left 
-                && selected != null 
-                && e.X > 0 && e.X < pictureBox1.Width 
-                && e.Y > 0 && e.Y < pictureBox1.Height)
+                && selected != null
+                && e.X - selected.Radius > 0 && e.X + selected.Radius < pictureBox1.Width
+                && e.Y - selected.Radius > 0 && e.Y + selected.Radius < pictureBox1.Height)
             {
                 toolTip1.Active = false;
                 if (graph.enoughRoomExcludingSelected(e.X, e.Y, selected))
@@ -77,7 +83,10 @@ namespace Euler
                     Cursor = Cursors.No;
                 printGraph();
             }
-            else if (editMode == 0 || editMode == 2 && e.Button != MouseButtons.Left && e.X > 0 && e.X < pictureBox1.Width && e.Y > 0 && e.Y < pictureBox1.Height)
+            else if ((editMode == 0 || editMode == 2) 
+                && e.Button != MouseButtons.Left 
+                && e.X > 0 && e.X < pictureBox1.Width 
+                && e.Y > 0 && e.Y < pictureBox1.Height)
             {
                 Vertex v = graph.getVertex(e.X, e.Y);
                 if (v != null)
@@ -93,7 +102,7 @@ namespace Euler
                     toolTip1.Active = false;
             }
 
-            if (editMode == 2)
+            if (editMode == 2 || editMode == 3)
             {
                 if (graph.getVertex(e.X, e.Y) != null)
                     Cursor = Cursors.Cross;
@@ -122,7 +131,7 @@ namespace Euler
                         {
                             graph.addVertex(new Vertex(e.X, e.Y, graph));
                             selected = graph.getVertex(e.X, e.Y);
-                            richTextBox1.Text = graph.adjacencyMatrixStringBasic();
+                            richTextBoxBasic.Text = graph.adjacencyMatrixStringBasic();
                         }
                         printGraph();
                         break;
@@ -142,7 +151,7 @@ namespace Euler
                                 secondVertex.addNeighbor(selected);
                                 selected = null;
                                 printGraph();
-                                richTextBox1.Text = graph.adjacencyMatrixStringBasic();
+                                richTextBoxBasic.Text = graph.adjacencyMatrixStringBasic();
                             }
                             else
                             {
@@ -168,7 +177,7 @@ namespace Euler
                                 secondVertex.removeNeighbor(selected);
                                 selected = null;
                                 printGraph();
-                                richTextBox1.Text = graph.adjacencyMatrixStringBasic();
+                                richTextBoxBasic.Text = graph.adjacencyMatrixStringBasic();
                             }
                             else
                             {
@@ -203,7 +212,7 @@ namespace Euler
 
         public void printGraph()
         {
-            graphImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            graphImage = new Bitmap(pictureBox1.Width, pictureBox1.Height + 100);
             graphics = Graphics.FromImage(graphImage);
             graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             graphics.Clear(graph.BackgroundColor);
@@ -226,10 +235,26 @@ namespace Euler
                 graphics.FillEllipse(new SolidBrush(v.Color), v.X - v.Radius, v.Y - v.Radius, v.Radius * 2, v.Radius * 2);
             }
 
-            //if(graph.NumberOfVertices > 1)
-            //    graphics.DrawRectangle(Pens.Black, graph.imageDomain());
-
             pictureBox1.Image = graphImage;
+            resetMatrixTextBoxes();
+        }
+
+        private void resetMatrixTextBoxes()
+        {
+            richTextBoxBasic.Text = graph.adjacencyMatrixStringBasic();
+            richTextBoxWolframAlpha.Text = graph.adjacencyMatrixStringWolframAlpha();
+            richTextBoxMatlab.Text = graph.adjacencyMatrixStringMatlab();
+        }
+
+        private void resetGUI()
+        {
+            graphCursor = Cursors.Arrow;
+            showButtonInUse(toolStripButtonSelect);
+            toolStripStatusLabel1.Text = "Ready";
+            editMode = 0;
+            propertyGrid1.SelectedObject = graph;
+            label2.Text = "Properties for Graph";
+            printGraph();
         }
 
         public Color blendColor(Color color, Color backColor, double amount)
@@ -286,7 +311,6 @@ namespace Euler
             {
                 graph.removeVertex(selected);
             }
-            richTextBox1.Text = graph.adjacencyMatrixStringBasic();
         }
 
         private void toolStripButtonAddEdge_Click(object sender, EventArgs e)
@@ -309,43 +333,46 @@ namespace Euler
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            List<String> fileList = new List<String>();
             SaveFileDialog saveDialog = new SaveFileDialog();
             saveDialog.Filter = "Euler Graph Files|*.egf";
             saveDialog.OverwritePrompt = true;
+            saveDialog.FileName = graph.Name;
+
             DialogResult result = saveDialog.ShowDialog();
-
             if (result == DialogResult.OK)
             {
-                String fileName = saveDialog.FileName;
-            }
-
-            /*
-            if (result == DialogResult.OK)
-            {
-                String fileName = saveDialog.FileName;
-                
-                foreach (Vertex v in graph.Vertices)
+                string fileName = saveDialog.FileName;
+                string graphNameWithExtension = fileName.Substring(fileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                graph.Name = graphNameWithExtension.Substring(0, graphNameWithExtension.Length - 4);
+                if (!graph.serialize(fileName))
+                    MessageBox.Show("Error:\nGraph did not save correctly!");
+                else
                 {
-                    // General vertex info
-                    fileList.Add(v.X.ToString());
-                    fileList.Add(v.Y.ToString());
-                    fileList.Add(v.Name);
-                    fileList.Add(v.Radius.ToString());
-                    fileList.Add(v.Color.ToArgb().ToString());
-
-                    // Add all neighbors
-                    foreach (Vertex n in v.Neighbors)
-                    {
-                        fileList.Add(v.Name);
-                    }
-                    fileList.Add("+");
+                    selected = null;
+                    propertyGrid1.SelectedObject = graph;
+                    printGraph();
+                    propertyGrid1.Refresh();
                 }
-
-                String[] lines = fileList.ToArray();
-                System.IO.File.WriteAllLines(@filename, lines);
             }
-            */
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Filter = "Euler Graph Files|*.egf";
+
+            DialogResult result = openDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                String fileName = openDialog.FileName;
+                this.graph = Graph.deserialize(fileName);
+                if (graph == null)
+                    MessageBox.Show("Error:\nCould not open file correctly.");
+                else
+                {
+                    resetGUI();
+                }
+            }
         }
     }
 }

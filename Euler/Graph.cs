@@ -6,18 +6,57 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 
 namespace Euler
 {
     [Serializable]
     public class Graph
     {
+        public static Graph deserialize(string serializedGraph)
+        {
+            Graph newGraph = null;
+            
+            FileStream fs = new FileStream(serializedGraph, FileMode.Open);
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                newGraph = (Graph)formatter.Deserialize(fs);
+            }
+            catch (SerializationException e)
+            {
+                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
+
+            return newGraph;
+        }
+
+        private string name = "Untitled";
         private List<Vertex> vertices;
         private Color backgroundColor = Color.White;
         private Color defaultVertexColor = Color.ForestGreen;
         private int defaultVertexSize = 10;
         private int[,] adjacencyMatrix;
-        
+
+        public string Name 
+        {
+            get
+            {
+                return name;
+            } 
+            set
+            {
+                name = value;
+            }
+        }
+
         public int DefaultVertexSize
         {
             get
@@ -27,10 +66,22 @@ namespace Euler
 
             set
             {
-                defaultVertexSize = value;
-                foreach (Vertex v in vertices)
+                if (value < 5)
                 {
-                    v.Radius = defaultVertexSize;
+                    MessageBox.Show("Too small: cannot be less than 5.");
+                }
+                else
+                {
+                    defaultVertexSize = value;
+
+                    DialogResult result = MessageBox.Show("Change existing vertices' radii to " + value + " as well?", "", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        foreach (Vertex v in vertices)
+                        {
+                            v.Radius = defaultVertexSize;
+                        }
+                    }
                 }
             }
         }
@@ -237,7 +288,46 @@ namespace Euler
                 output = output.Substring(0, output.Length - 1);
                 output += "\n";
             }
+            output = output.Substring(0, Math.Max(0, output.Length - 1));
+            return output;
+        }
+
+        public string adjacencyMatrixStringWolframAlpha()
+        {
+            string output = "{";
+            int[,] adj = AdjacencyMatrix;
+
+            for (int i = 0; i < NumberOfVertices; i++)
+            {
+                output += "{";
+                for (int j = 0; j < NumberOfVertices; j++)
+                {
+                    output += "" + adj[i, j] + ",";
+                }
+                output = output.Substring(0, output.Length - 1);
+                output += "},";
+            }
             output = output.Substring(0, output.Length - 1);
+            output += "}";
+            return output;
+        }
+
+        public string adjacencyMatrixStringMatlab()
+        {
+            string output = "[";
+            int[,] adj = AdjacencyMatrix;
+
+            for (int i = 0; i < NumberOfVertices; i++)
+            {
+                for (int j = 0; j < NumberOfVertices; j++)
+                {
+                    output += "" + adj[i, j] + " ";
+                }
+                output = output.Substring(0, output.Length - 1);
+                output += "; ";
+            }
+            output = output.Substring(0, Math.Max(0, output.Length - 2));
+            output += "]";
             return output;
         }
 
@@ -269,6 +359,30 @@ namespace Euler
             domain = new Rectangle(new Point(leftMost, topMost), new Size(rightMost - leftMost, bottomMost - topMost));
 
             return domain;
+        }
+
+        public Boolean serialize(string saveFile)
+        {
+            Boolean success = true;
+            FileStream fs = new FileStream(saveFile, FileMode.Create);
+
+            BinaryFormatter formatter = new BinaryFormatter();
+            try
+            {
+                formatter.Serialize(fs, this);
+            }
+            catch (SerializationException e)
+            {
+                success = false;
+                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
+
+            return success;
         }
     }
 }

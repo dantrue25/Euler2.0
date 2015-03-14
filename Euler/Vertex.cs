@@ -17,6 +17,7 @@ namespace Euler
         private string name;
         private int x;
         private int y;
+        private int radius;
 
         public Vertex(int x, int y, Graph g)
         {
@@ -25,7 +26,7 @@ namespace Euler
             this.y = y;
             this.Color = g.DefaultVertexColor;
             this.neighbors = new List<Vertex>();
-            this.Radius = g.DefaultVertexSize;
+            this.radius = g.DefaultVertexSize;
             this.parent = g;
         }
 
@@ -92,8 +93,19 @@ namespace Euler
                 }
             }
         }
+        
         public Color Color { get; set; }
-        public int Radius { get; set; }
+        
+        public int Radius {
+            get
+            {
+                return radius;
+            }
+            set
+            {
+                radius = Math.Max(5, value);
+            }
+        }
 
         public ReadOnlyCollection<Vertex> Neighbors { 
             get
