@@ -24,7 +24,6 @@ namespace Euler
             
             graph = new Graph();
             editMode = 0;
-            printGraph();
 
             graphCursor = Cursors.Arrow;
             label2.Text = "Properties for Graph";
@@ -33,6 +32,8 @@ namespace Euler
             toolStripStatusLabel3.Text = "";
             showButtonInUse(toolStripButtonSelect);
             toolTip1.Active = true;
+            graphImage = new Bitmap(Math.Min(1000, pictureBox1.Width), Math.Min(1000, pictureBox1.Height));
+            printGraph();
         }
 
         void pictureBox1_MouseUp(object sender, MouseEventArgs e)
@@ -131,8 +132,8 @@ namespace Euler
                         {
                             graph.addVertex(new Vertex(e.X, e.Y, graph));
                             selected = graph.getVertex(e.X, e.Y);
-                            richTextBoxBasic.Text = graph.adjacencyMatrixStringBasic();
                         }
+                        resetMatrixTextBoxes();
                         printGraph();
                         break;
                     case (2):
@@ -140,6 +141,7 @@ namespace Euler
                         {
                             selected = graph.getVertex(e.X, e.Y);
                             toolStripStatusLabel1.Text = "Add edge: Now click on the vertex you wish to add as a neighbor.";
+
                             printGraph();
                         }
                         else
@@ -150,8 +152,9 @@ namespace Euler
                                 selected.addNeighbor(secondVertex);
                                 secondVertex.addNeighbor(selected);
                                 selected = null;
+
+                                resetMatrixTextBoxes();
                                 printGraph();
-                                richTextBoxBasic.Text = graph.adjacencyMatrixStringBasic();
                             }
                             else
                             {
@@ -176,8 +179,9 @@ namespace Euler
                                 selected.removeNeighbor(secondVertex);
                                 secondVertex.removeNeighbor(selected);
                                 selected = null;
+
+                                resetMatrixTextBoxes();
                                 printGraph();
-                                richTextBoxBasic.Text = graph.adjacencyMatrixStringBasic();
                             }
                             else
                             {
@@ -213,7 +217,9 @@ namespace Euler
 
         public void printGraph()
         {
-            graphImage = new Bitmap(pictureBox1.Width, pictureBox1.Height + 100);
+            if(graphImage.Size != pictureBox1.Size)
+                graphImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+
             graphics = Graphics.FromImage(graphImage);
             graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             graphics.Clear(graph.BackgroundColor);
@@ -251,14 +257,25 @@ namespace Euler
                 }
             }
 
+            if(graph.GraphLabelVisible)
+            {
+                if (graph.BackgroundColor.Equals(Color.Transparent))
+                    graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+                Size nameSize = TextRenderer.MeasureText(graph.Name, graph.GraphLabelFont);
+                graphics.DrawString(graph.Name, graph.GraphLabelFont,Brushes.Black, 20, 20);
+            }
+
             pictureBox1.Image = graphImage;
         }
 
         private void resetMatrixTextBoxes()
         {
-            richTextBoxBasic.Text = graph.adjacencyMatrixStringBasic();
-            richTextBoxWolframAlpha.Text = graph.adjacencyMatrixStringWolframAlpha();
-            richTextBoxMatlab.Text = graph.adjacencyMatrixStringMatlab();
+            SquareMatrix adjacencyMatrix = graph.AdjacencyMatrix;
+
+            richTextBoxBasic.Text = adjacencyMatrix.toStringBasic();
+            richTextBoxWolframAlpha.Text = adjacencyMatrix.toStringWolframAlpha();
+            richTextBoxMatlab.Text = adjacencyMatrix.toStringMatlab();
+            richTextBoxPower.Text = adjacencyMatrix.toThePower(2).toStringBasic();
         }
 
         private void resetGUI()

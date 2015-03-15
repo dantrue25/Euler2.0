@@ -44,9 +44,11 @@ namespace Euler
         private Color defaultVertexColor = Color.ForestGreen;
         private Color vertexLabelColor = Color.Black;
         private int defaultVertexSize = 10;
-        private int[,] adjacencyMatrix;
+        private SquareMatrix adjacencyMatrix;
         private bool vertexLabelVisible = true;
         private Font vertexLabelFont = SystemFonts.DefaultFont;
+        private bool graphLabelVisible = true;
+        private Font graphLabelFont = new Font(SystemFonts.DefaultFont.FontFamily, 24);
         private Color edgeColor = Color.Black;
         private int edgeWidth = 2;
 
@@ -59,6 +61,32 @@ namespace Euler
             set
             {
                 name = value;
+            }
+        }
+
+        public bool GraphLabelVisible
+        {
+            get
+            {
+                return graphLabelVisible;
+            }
+
+            set
+            {
+                graphLabelVisible = value;
+            }
+        }
+
+        public Font GraphLabelFont
+        {
+            get
+            {
+                return graphLabelFont;
+            }
+
+            set
+            {
+                graphLabelFont = value;
             }
         }
 
@@ -328,77 +356,13 @@ namespace Euler
         }
 
         [Browsable(false)]
-        public int[,] AdjacencyMatrix
+        public SquareMatrix AdjacencyMatrix
         {
             get
             {
-                adjacencyMatrix = new int[NumberOfVertices, NumberOfVertices];
-                foreach (Vertex v in vertices)
-                {
-                    foreach (Vertex n in v.Neighbors)
-                    {
-                        adjacencyMatrix[v.indexInGraph(), n.indexInGraph()] = 1;
-                    }
-                }
+                adjacencyMatrix = new SquareMatrix(this);
                 return adjacencyMatrix;
             }
-        }
-
-        public string adjacencyMatrixStringBasic()
-        {
-            string output = "";
-            int[,] adj = AdjacencyMatrix;
-
-            for (int i = 0; i < NumberOfVertices; i++)
-            {
-                for (int j = 0; j < NumberOfVertices; j++)
-                {
-                    output += "" + adj[i, j] + " ";
-                }
-                output = output.Substring(0, output.Length - 1);
-                output += "\n";
-            }
-            output = output.Substring(0, Math.Max(0, output.Length - 1));
-            return output;
-        }
-
-        public string adjacencyMatrixStringWolframAlpha()
-        {
-            string output = "{";
-            int[,] adj = AdjacencyMatrix;
-
-            for (int i = 0; i < NumberOfVertices; i++)
-            {
-                output += "{";
-                for (int j = 0; j < NumberOfVertices; j++)
-                {
-                    output += "" + adj[i, j] + ",";
-                }
-                output = output.Substring(0, output.Length - 1);
-                output += "},";
-            }
-            output = output.Substring(0, output.Length - 1);
-            output += "}";
-            return output;
-        }
-
-        public string adjacencyMatrixStringMatlab()
-        {
-            string output = "[";
-            int[,] adj = AdjacencyMatrix;
-
-            for (int i = 0; i < NumberOfVertices; i++)
-            {
-                for (int j = 0; j < NumberOfVertices; j++)
-                {
-                    output += "" + adj[i, j] + " ";
-                }
-                output = output.Substring(0, output.Length - 1);
-                output += "; ";
-            }
-            output = output.Substring(0, Math.Max(0, output.Length - 2));
-            output += "]";
-            return output;
         }
 
         public Rectangle imageDomain()

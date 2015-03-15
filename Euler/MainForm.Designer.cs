@@ -53,6 +53,8 @@
             this.richTextBoxBasic = new System.Windows.Forms.RichTextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.richTextBoxWolframAlpha = new System.Windows.Forms.RichTextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.richTextBoxMatlab = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -60,8 +62,8 @@
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.richTextBoxMatlab = new System.Windows.Forms.RichTextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.richTextBoxPower = new System.Windows.Forms.RichTextBox();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -78,9 +80,10 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.panel1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -106,14 +109,14 @@
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -275,6 +278,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -322,6 +326,26 @@
             this.richTextBoxWolframAlpha.Size = new System.Drawing.Size(258, 198);
             this.richTextBoxWolframAlpha.TabIndex = 0;
             this.richTextBoxWolframAlpha.Text = "";
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.richTextBoxMatlab);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(264, 204);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Matlab";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // richTextBoxMatlab
+            // 
+            this.richTextBoxMatlab.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBoxMatlab.Location = new System.Drawing.Point(3, 3);
+            this.richTextBoxMatlab.Name = "richTextBoxMatlab";
+            this.richTextBoxMatlab.Size = new System.Drawing.Size(258, 198);
+            this.richTextBoxMatlab.TabIndex = 0;
+            this.richTextBoxMatlab.Text = "";
             // 
             // panel1
             // 
@@ -378,25 +402,26 @@
             this.toolTip1.InitialDelay = 200;
             this.toolTip1.ReshowDelay = 200;
             // 
-            // tabPage3
+            // tabPage4
             // 
-            this.tabPage3.Controls.Add(this.richTextBoxMatlab);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(264, 204);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Matlab";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPage4.Controls.Add(this.richTextBoxPower);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(264, 204);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Power";
+            this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // richTextBoxMatlab
+            // richTextBoxPower
             // 
-            this.richTextBoxMatlab.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBoxMatlab.Location = new System.Drawing.Point(3, 3);
-            this.richTextBoxMatlab.Name = "richTextBoxMatlab";
-            this.richTextBoxMatlab.Size = new System.Drawing.Size(258, 198);
-            this.richTextBoxMatlab.TabIndex = 0;
-            this.richTextBoxMatlab.Text = "";
+            this.richTextBoxPower.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBoxPower.Location = new System.Drawing.Point(3, 3);
+            this.richTextBoxPower.Name = "richTextBoxPower";
+            this.richTextBoxPower.Size = new System.Drawing.Size(258, 198);
+            this.richTextBoxPower.TabIndex = 0;
+            this.richTextBoxPower.Text = "";
+            this.richTextBoxPower.WordWrap = false;
             // 
             // MainForm
             // 
@@ -429,11 +454,12 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -473,6 +499,8 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.RichTextBox richTextBoxMatlab;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.RichTextBox richTextBoxPower;
     }
 }
 
