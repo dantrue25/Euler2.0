@@ -1,9 +1,6 @@
 
 TODO:
 
-make graph vertices expandable in propgrid
-make vertex neighbors expandable in propgrid
-label vertices
 
 adjacency matrix
 	-powers
@@ -20,3 +17,15 @@ eigen vector/value
 graph
 	-copy/paste
 	-export as image
+
+
+create an Edge class which will have two vertices
+have a color, width, weight, isDirected
+graph has a list of edges
+create an edge when "Add edge" is used
+
+ 
+graph vertices expandable in propgrid
+
+vertex neighbors expandable in propgrid
+
