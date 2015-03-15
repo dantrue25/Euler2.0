@@ -3,7 +3,7 @@ TODO:
 
 make graph vertices expandable in propgrid
 make vertex neighbors expandable in propgrid
-
+label vertices
 
 adjacency matrix
 	-powers

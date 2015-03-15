@@ -206,6 +206,7 @@ namespace Euler
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            resetMatrixTextBoxes();
             printGraph();
             base.OnPaint(e);
         }
@@ -218,16 +219,18 @@ namespace Euler
             graphics.Clear(graph.BackgroundColor);
             graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
 
+            // Draw edges
             foreach (Vertex v in graph.Vertices)
             {
                 foreach (Vertex n in v.Neighbors)
                 {
                     if (v.Equals(n))
-                        graphics.DrawEllipse(Pens.Black, (int) (v.X - 2.8 * v.Radius), (int) (v.Y - 2.8 * v.Radius), 3 * v.Radius, 3 * v.Radius); 
-                    graphics.DrawLine(Pens.Black, v.Location, n.Location);
+                        graphics.DrawEllipse(new Pen(graph.EdgeColor, graph.EdgeWidth), (int) (v.X - 2.8 * v.Radius), (int) (v.Y - 2.8 * v.Radius), 3 * v.Radius, 3 * v.Radius);
+                    graphics.DrawLine(new Pen(graph.EdgeColor, graph.EdgeWidth), v.Location, n.Location);
                 }
             }
 
+            // Draw vertices
             foreach (Vertex v in graph.Vertices)
             {
                 if(selected != null && v.X == selected.X && v.Y == selected.Y)
@@ -235,8 +238,20 @@ namespace Euler
                 graphics.FillEllipse(new SolidBrush(v.Color), v.X - v.Radius, v.Y - v.Radius, v.Radius * 2, v.Radius * 2);
             }
 
+            // If visible, draw vertex names
+            if (graph.VertexLabelVisible)
+            {
+                foreach (Vertex v in graph.Vertices)
+                {
+                    if(graph.BackgroundColor.Equals(Color.Transparent))
+                        graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+                    Size nameSize = TextRenderer.MeasureText(v.Name, graph.VertexLabelFont);
+                    //graphics.DrawRectangle(Pens.Black, new Rectangle(v.X - nameSize.Width / 2, v.Y - v.Radius - nameSize.Height - 10, nameSize.Width, nameSize.Height));
+                    graphics.DrawString(v.Name, graph.VertexLabelFont, new SolidBrush(graph.VertexLabelColor), v.X - nameSize.Width / 2, v.Y - v.Radius - nameSize.Height - 10);
+                }
+            }
+
             pictureBox1.Image = graphImage;
-            resetMatrixTextBoxes();
         }
 
         private void resetMatrixTextBoxes()

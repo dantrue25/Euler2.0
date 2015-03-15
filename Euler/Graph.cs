@@ -42,8 +42,13 @@ namespace Euler
         private List<Vertex> vertices;
         private Color backgroundColor = Color.White;
         private Color defaultVertexColor = Color.ForestGreen;
+        private Color vertexLabelColor = Color.Black;
         private int defaultVertexSize = 10;
         private int[,] adjacencyMatrix;
+        private bool vertexLabelVisible = true;
+        private Font vertexLabelFont = SystemFonts.DefaultFont;
+        private Color edgeColor = Color.Black;
+        private int edgeWidth = 2;
 
         public string Name 
         {
@@ -54,6 +59,71 @@ namespace Euler
             set
             {
                 name = value;
+            }
+        }
+
+        public Color EdgeColor
+        {
+            get
+            {
+                return edgeColor;
+            }
+
+            set 
+            {
+                edgeColor = value;
+            }
+        }
+
+        public int EdgeWidth
+        {
+            get
+            {
+                return edgeWidth;
+            }
+
+            set
+            {
+                edgeWidth = value;
+            }
+        }
+
+        public Font VertexLabelFont
+        {
+            get
+            {
+                return vertexLabelFont;
+            }
+
+            set
+            {
+                vertexLabelFont = value;
+            }
+        }
+
+        public bool VertexLabelVisible
+        {
+            get
+            {
+                return vertexLabelVisible;
+            }
+
+            set 
+            {
+                vertexLabelVisible = value;
+            }
+        }
+
+        public Color VertexLabelColor
+        {
+            get 
+            {
+                return vertexLabelColor;
+            }
+
+            set
+            {
+                vertexLabelColor = value;
             }
         }
 
