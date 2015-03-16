@@ -257,12 +257,13 @@ namespace Euler
                 }
             }
 
+            // If visible, draw graph name
             if(graph.GraphLabelVisible)
             {
                 if (graph.BackgroundColor.Equals(Color.Transparent))
                     graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
                 Size nameSize = TextRenderer.MeasureText(graph.Name, graph.GraphLabelFont);
-                graphics.DrawString(graph.Name, graph.GraphLabelFont,Brushes.Black, 20, 20);
+                graphics.DrawString(graph.Name, graph.GraphLabelFont,Brushes.Black, pictureBox1.Width / 2 - nameSize.Width / 2, 20);
             }
 
             pictureBox1.Image = graphImage;
@@ -276,6 +277,7 @@ namespace Euler
             richTextBoxWolframAlpha.Text = adjacencyMatrix.toStringWolframAlpha();
             richTextBoxMatlab.Text = adjacencyMatrix.toStringMatlab();
             richTextBoxPower.Text = adjacencyMatrix.toThePower(2).toStringBasic();
+            richTextBoxEigenVector.Text = adjacencyMatrix.getEigenVectorString();
         }
 
         private void resetGUI()
@@ -286,6 +288,7 @@ namespace Euler
             editMode = 0;
             propertyGrid1.SelectedObject = graph;
             label2.Text = "Properties for Graph";
+            resetMatrixTextBoxes();
             printGraph();
         }
 

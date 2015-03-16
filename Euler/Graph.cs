@@ -409,7 +409,6 @@ namespace Euler
             {
                 success = false;
                 Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-                throw;
             }
             finally
             {

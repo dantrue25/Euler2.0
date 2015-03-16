@@ -55,6 +55,8 @@
             this.richTextBoxWolframAlpha = new System.Windows.Forms.RichTextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.richTextBoxMatlab = new System.Windows.Forms.RichTextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.richTextBoxPower = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -62,8 +64,8 @@
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.richTextBoxPower = new System.Windows.Forms.RichTextBox();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.richTextBoxEigenVector = new System.Windows.Forms.RichTextBox();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -81,9 +83,10 @@
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.panel1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            this.tabPage4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -201,7 +204,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(1065, 615);
-            this.splitContainer1.SplitterDistance = 785;
+            this.splitContainer1.SplitterDistance = 749;
             this.splitContainer1.TabIndex = 3;
             this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
@@ -212,7 +215,7 @@
             this.pictureBox1.MaximumSize = new System.Drawing.Size(15000, 15000);
             this.pictureBox1.MinimumSize = new System.Drawing.Size(1, 1);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(781, 611);
+            this.pictureBox1.Size = new System.Drawing.Size(745, 611);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -233,7 +236,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.panel2);
             this.splitContainer2.Panel2.Controls.Add(this.panel1);
-            this.splitContainer2.Size = new System.Drawing.Size(276, 615);
+            this.splitContainer2.Size = new System.Drawing.Size(312, 615);
             this.splitContainer2.SplitterDistance = 354;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -242,7 +245,7 @@
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid1.Location = new System.Drawing.Point(0, 25);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(272, 325);
+            this.propertyGrid1.Size = new System.Drawing.Size(308, 325);
             this.propertyGrid1.TabIndex = 0;
             // 
             // panel3
@@ -252,7 +255,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(272, 25);
+            this.panel3.Size = new System.Drawing.Size(308, 25);
             this.panel3.TabIndex = 1;
             // 
             // label2
@@ -270,7 +273,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 23);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(272, 230);
+            this.panel2.Size = new System.Drawing.Size(308, 230);
             this.panel2.TabIndex = 1;
             // 
             // tabControl1
@@ -279,11 +282,12 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(272, 230);
+            this.tabControl1.Size = new System.Drawing.Size(308, 230);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -292,7 +296,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(264, 204);
+            this.tabPage1.Size = new System.Drawing.Size(300, 204);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basic";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -302,7 +306,7 @@
             this.richTextBoxBasic.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBoxBasic.Location = new System.Drawing.Point(3, 3);
             this.richTextBoxBasic.Name = "richTextBoxBasic";
-            this.richTextBoxBasic.Size = new System.Drawing.Size(258, 198);
+            this.richTextBoxBasic.Size = new System.Drawing.Size(294, 198);
             this.richTextBoxBasic.TabIndex = 0;
             this.richTextBoxBasic.Text = "";
             this.richTextBoxBasic.WordWrap = false;
@@ -347,6 +351,27 @@
             this.richTextBoxMatlab.TabIndex = 0;
             this.richTextBoxMatlab.Text = "";
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.richTextBoxPower);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(300, 204);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Power";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // richTextBoxPower
+            // 
+            this.richTextBoxPower.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBoxPower.Location = new System.Drawing.Point(3, 3);
+            this.richTextBoxPower.Name = "richTextBoxPower";
+            this.richTextBoxPower.Size = new System.Drawing.Size(294, 198);
+            this.richTextBoxPower.TabIndex = 0;
+            this.richTextBoxPower.Text = "";
+            this.richTextBoxPower.WordWrap = false;
+            // 
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -354,7 +379,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(272, 23);
+            this.panel1.Size = new System.Drawing.Size(308, 23);
             this.panel1.TabIndex = 0;
             // 
             // label1
@@ -402,26 +427,25 @@
             this.toolTip1.InitialDelay = 200;
             this.toolTip1.ReshowDelay = 200;
             // 
-            // tabPage4
+            // tabPage5
             // 
-            this.tabPage4.Controls.Add(this.richTextBoxPower);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(264, 204);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Power";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.tabPage5.Controls.Add(this.richTextBoxEigenVector);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(300, 204);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Eigen Vector ";
+            this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // richTextBoxPower
+            // richTextBoxEigenVector
             // 
-            this.richTextBoxPower.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBoxPower.Location = new System.Drawing.Point(3, 3);
-            this.richTextBoxPower.Name = "richTextBoxPower";
-            this.richTextBoxPower.Size = new System.Drawing.Size(258, 198);
-            this.richTextBoxPower.TabIndex = 0;
-            this.richTextBoxPower.Text = "";
-            this.richTextBoxPower.WordWrap = false;
+            this.richTextBoxEigenVector.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBoxEigenVector.Location = new System.Drawing.Point(3, 3);
+            this.richTextBoxEigenVector.Name = "richTextBoxEigenVector";
+            this.richTextBoxEigenVector.Size = new System.Drawing.Size(294, 198);
+            this.richTextBoxEigenVector.TabIndex = 0;
+            this.richTextBoxEigenVector.Text = "";
             // 
             // MainForm
             // 
@@ -455,11 +479,12 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -501,6 +526,8 @@
         private System.Windows.Forms.RichTextBox richTextBoxMatlab;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.RichTextBox richTextBoxPower;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.RichTextBox richTextBoxEigenVector;
     }
 }
 

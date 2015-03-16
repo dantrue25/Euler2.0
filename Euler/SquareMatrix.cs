@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Euler
 {
+    [Serializable]
     public class SquareMatrix
     {
         private int[,] matrix;
@@ -92,7 +94,7 @@ namespace Euler
 
         public SquareMatrix toThePower(int p)
         {
-            int[,] temp = this.matrix;
+            int[,] temp = (int[,])this.matrix.Clone();
             int[,] adjPow = new int[this.n, this.n];
             for (int i = 1; i < p; i++)
             {
@@ -106,6 +108,138 @@ namespace Euler
             }
 
             return new SquareMatrix(this.n, adjPow);
+        }
+
+        public double[] getDomEigenVector()
+        {
+            if (n == 0)
+                return null;
+            int[,] A = (int[,])this.matrix.Clone();
+            const int maxIterations = 100000;
+            // Keeps iterating until the difference of the Eigen vector approximations are less than this
+            const double accuracy = 0.00001;
+
+            int count = 0;
+            double[] tmp = new double[this.n];
+            double[] b = new double[this.n];
+            double[] bTemp = new double[this.n];
+            double norm = 0;
+
+            for (int i = 0; i < this.n; i++)
+            {
+                b.SetValue(1, i);
+            }
+
+            /* 
+             * Main loop: 
+             * keeps recalculating the Eigen Vector until either the Euclidean distance between
+             * the current iteration and the last iteration is smaller than 'accuracy' or
+             * the loop has reached the 'maxIteration' limit.
+             */
+            while (euclideanDist(b, bTemp) >= accuracy)
+            {
+                for (int index = 0; index < this.n; index++)
+                {
+                    bTemp[index] = b[index];
+                }
+
+                // calculate the matrix-by-vector product Ab
+                for (int i = 0; i < this.n; i++)
+                {
+                    tmp[i] = 0;
+                    for (int j = 0; j < this.n; j++)
+                        tmp[i] += A[i, j] * b[j];
+                    // dot product of i-th row in A with the column vector b
+                }
+
+                // Calculate the length of the resultant vector
+                double norm_sq = 0;
+                for (int k = 0; k < this.n; k++)
+                    norm_sq += tmp[k] * tmp[k];
+                norm = Math.Sqrt(norm_sq);
+
+                // If norm is not 0, Normalize tmp, and put it in vector 'b'
+                if (norm != 0)
+                {
+                    for (int l = 0; l < this.n; l++)
+                        b[l] = tmp[l] / norm;
+                }
+                else
+                {
+                    for (int l = 0; l < this.n; l++)
+                        b[l] = 0;
+                }
+
+                // Check if iteration count has exceeded the maximum
+                count++;
+                if (count >= maxIterations)
+                {
+                    MessageBox.Show("Eigen Vector did not converge.");
+                    return null;
+                }
+            }
+
+            /* Divide each entry in the vector by the last value.
+             * (I chose this because Wolfram Alpha output formats its Eigen vectors that way,
+             * and thus was easy to compare results.)
+             */
+            double divisor = 1;
+            for (int i = 0; i < this.n; i++)
+            {
+                if (b[this.n - 1 - i] != 0)
+                {
+                    divisor = b[this.n - 1 - i];
+                    break;
+                }
+            }
+            for (int x = 0; x < this.n; x++)
+            {
+                b[x] /= divisor;
+            }
+
+            // Set the graph's Eigen value. It is a public variable in this class.
+            //eigenVal = norm;
+
+            return b;
+        }
+
+        // Calculate the Euclidean distance between two vectors of the same length
+        private double euclideanDist(double[] vect1, double[] vect2)
+        {
+            if (vect1.Length != vect2.Length)
+                throw new Exception();
+
+            int length = vect1.Length;
+            double dist = 0.0;
+
+            for (int i = 0; i < this.n; i++)
+            {
+                dist += Math.Pow((vect1[i] - vect2[i]), 2);
+            }
+
+            dist = Math.Sqrt(dist);
+
+            return dist;
+        }
+
+        public string getEigenVectorString()
+        {
+            string output = "";
+            double[] eigenVector = this.getDomEigenVector();
+
+            if (eigenVector == null)
+                return "";
+            
+            int length = eigenVector.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                output += "" + string.Format("{0:0.000}", eigenVector[i]) + "\n";
+            }
+
+            output = output.Substring(0, Math.Max(0, output.Length - 1));
+
+            return output;
         }
     }
 }
