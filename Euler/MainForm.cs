@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,12 +26,14 @@ namespace Euler
             graph = new Graph();
             editMode = 0;
 
+            comboBox1.SelectedIndex = 1;
+            selectedOutput = 0;
             graphCursor = Cursors.Arrow;
             label2.Text = "Properties for Graph";
             propertyGrid1.SelectedObject = graph;
             toolStripStatusLabel1.Text = "Ready";
             toolStripStatusLabel3.Text = "";
-            showButtonInUse(toolStripButtonSelect);
+            showButtonInUse(toolStripButtonSelectMoveVertex);
             toolTip1.Active = true;
             graphImage = new Bitmap(Math.Min(1000, pictureBox1.Width), Math.Min(1000, pictureBox1.Height));
             printGraph();
@@ -55,6 +58,7 @@ namespace Euler
         void propertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             propertyGrid1.Refresh();
+            resetMatrixTextBoxes();
             printGraph();
         }
 
@@ -108,13 +112,41 @@ namespace Euler
                 if (graph.getVertex(e.X, e.Y) != null)
                     Cursor = Cursors.Cross;
             }
+
+            if (editMode == 4
+                && e.Button == MouseButtons.Left
+                && e.X > 0 && e.X < pictureBox1.Width
+                && e.Y > 0 && e.Y < pictureBox1.Height)
+            {
+                graphImageDomain.Size = new Size(Math.Abs(e.X - clickPoint.X), Math.Abs(e.Y - clickPoint.Y));
+                graphImageDomain.Location = new Point(Math.Min(e.X, clickPoint.X), Math.Min(e.Y, clickPoint.Y));
+                printGraph();
+            }
         }
 
         void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
+                contextMenuStrip1.Items.Clear();
                 selected = graph.getVertex(e.X, e.Y);
+                if (selected == null)
+                {
+                    contextMenuStrip1.Items.Add(copyGraphImageToolStripMenuItem);
+                }
+                else
+                {
+                    deleteToolStripMenuItem.Text = "Delete " + selected.Name;
+                    contextMenuStrip1.Items.Add(deleteToolStripMenuItem);
+                    contextMenuStrip1.Items.Add(copyGraphImageToolStripMenuItem);
+                }
+
+                if (editMode == 4)
+                {
+                    if (graphImageDomain.Size.Width != 0 || graphImageDomain.Size.Height != 0)
+                        contextMenuStrip1.Items.Add(copyGraphImageSubsectionToolStripMenuItem);
+                }
+                contextMenuStrip1.Show(pictureBox1.PointToScreen(e.Location));
             }
 
             else if (e.Button == MouseButtons.Left)
@@ -191,6 +223,10 @@ namespace Euler
                             toolStripStatusLabel1.Text = "Delete edge: Click on the vertex you want to remove the edge from.";
                         }
                         break;
+                    case(4):
+                        clickPoint = e.Location;
+                        graphImageDomain.Size = new Size(0, 0);
+                        break;
                     default:
                         break;
                 }
@@ -217,13 +253,12 @@ namespace Euler
 
         public void printGraph()
         {
-            if(graphImage.Size != pictureBox1.Size)
+            if (graphImage.Size != pictureBox1.Size)
                 graphImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
 
             graphics = Graphics.FromImage(graphImage);
             graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             graphics.Clear(graph.BackgroundColor);
-            graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
 
             // Draw edges
             foreach (Vertex v in graph.Vertices)
@@ -266,6 +301,14 @@ namespace Euler
                 graphics.DrawString(graph.Name, graph.GraphLabelFont,Brushes.Black, pictureBox1.Width / 2 - nameSize.Width / 2, 20);
             }
 
+            // If edit mode is Select Area
+            if (editMode == 4)
+            {
+                Pen dashed = new Pen(Color.Black, 1);
+                dashed.DashPattern = new float[]{2f, 2f};
+                graphics.DrawRectangle(dashed, graphImageDomain);
+            }
+
             pictureBox1.Image = graphImage;
         }
 
@@ -273,17 +316,31 @@ namespace Euler
         {
             SquareMatrix adjacencyMatrix = graph.AdjacencyMatrix;
 
-            richTextBoxBasic.Text = adjacencyMatrix.toStringBasic();
-            richTextBoxWolframAlpha.Text = adjacencyMatrix.toStringWolframAlpha();
-            richTextBoxMatlab.Text = adjacencyMatrix.toStringMatlab();
-            richTextBoxPower.Text = adjacencyMatrix.toThePower(2).toStringBasic();
-            richTextBoxEigenVector.Text = adjacencyMatrix.getEigenVectorString();
+            switch (selectedOutput)
+            {
+                case(0):
+                    richTextBoxBasic.Text = adjacencyMatrix.toStringBasic();
+                    break;
+                case(1):
+                    richTextBoxWolframAlpha.Text = adjacencyMatrix.toStringWolframAlpha();
+                    break;
+                case(2):
+                    richTextBoxMatlab.Text = adjacencyMatrix.toStringMatlab();
+                    break;
+                case(3):
+                    richTextBoxPower.Text = adjacencyMatrix.toThePower(comboBox1.SelectedIndex + 1).toStringBasic();
+                    break;
+                default:
+                    richTextBoxEigenVector.Text = adjacencyMatrix.getEigenVectorString();
+                    break;
+            }
+            
         }
 
         private void resetGUI()
         {
             graphCursor = Cursors.Arrow;
-            showButtonInUse(toolStripButtonSelect);
+            showButtonInUse(toolStripButtonSelectMoveVertex);
             toolStripStatusLabel1.Text = "Ready";
             editMode = 0;
             propertyGrid1.SelectedObject = graph;
@@ -302,6 +359,7 @@ namespace Euler
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
+            resetMatrixTextBoxes();
             printGraph();
         }
 
@@ -311,6 +369,10 @@ namespace Euler
         public Vertex selected;
         private int editMode;
         private Cursor graphCursor;
+        private int selectedOutput;
+        private Rectangle graphImageDomain;
+        private Point clickPoint;
+        private int currentExponent;
 
         private void showButtonInUse(ToolStripButton b)
         {
@@ -327,7 +389,7 @@ namespace Euler
         private void toolStripButtonSelect_Click(object sender, EventArgs e)
         {
             graphCursor = Cursors.Arrow;
-            showButtonInUse(toolStripButtonSelect);
+            showButtonInUse(toolStripButtonSelectMoveVertex);
             toolStripStatusLabel1.Text = "Ready";
             editMode = 0;
         }
@@ -408,6 +470,57 @@ namespace Euler
                     resetGUI();
                 }
             }
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            selectedOutput = tabControl1.SelectedIndex;
+            resetMatrixTextBoxes();
+        }
+
+        private void copyGraphImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetImage(graphImage);
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(selected != null)
+                graph.removeVertex(selected);
+
+            resetMatrixTextBoxes();
+            printGraph();
+        }
+
+        private void toolStripButtonSelectArea_Click(object sender, EventArgs e)
+        {
+            graphCursor = Cursors.Arrow;
+            selected = null;
+            showButtonInUse(toolStripButtonSelectArea);
+            toolStripStatusLabel1.Text = "Select a section of the graph image.";
+            graphImageDomain = new Rectangle();
+            editMode = 4;
+        }
+
+        private void copyGraphImageSubsectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetImage
+            (
+                graphImage.Clone
+                (
+                    new Rectangle
+                    (
+                        new Point(graphImageDomain.X + 1, graphImageDomain.Y + 1), 
+                        new Size(graphImageDomain.Size.Width - 1, graphImageDomain.Size.Height - 1)
+                    ), 
+                    System.Drawing.Imaging.PixelFormat.Format32bppArgb
+                )
+            );
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            resetMatrixTextBoxes();
         }
     }
 }
