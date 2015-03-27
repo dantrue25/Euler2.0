@@ -11,6 +11,7 @@ namespace Euler
     {
         private int[,] matrix;
         private int n;
+        private bool converge;
 
         public SquareMatrix(int n)
         {
@@ -208,6 +209,9 @@ namespace Euler
         {
             if (n == 0)
                 return null;
+
+            converge = true;
+
             int[,] A = (int[,])this.matrix.Clone();
             const int maxIterations = 100000;
             // Keeps iterating until the difference of the Eigen vector approximations are less than this
@@ -268,6 +272,8 @@ namespace Euler
                 count++;
                 if (count >= maxIterations)
                 {
+                    converge = false;
+
                     for (int l = 0; l < this.n; l++)
                         A[l, l] += 1;
                     SquareMatrix A2 = new SquareMatrix(this.n, A);
@@ -280,7 +286,7 @@ namespace Euler
             double divisor = 1;
             for (int i = 0; i < this.n; i++)
             {
-                if (b[this.n - 1 - i] != 0)
+                if (b[this.n - 1 - i] >= (1.0/this.n))
                 {
                     divisor = b[this.n - 1 - i];
                     break;
@@ -333,6 +339,9 @@ namespace Euler
             }
 
             output = output.Substring(0, Math.Max(0, output.Length - 1));
+
+            if (!converge)
+                output += "\n\nThis is not the only dominant Eigen Vector.";
 
             return output;
         }
