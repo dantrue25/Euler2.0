@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -20,7 +21,7 @@ namespace Euler
         }
 
         public SquareMatrix(int n, int[,] matrix)
-        {
+        { 
             this.n = n;
             this.matrix = matrix;
         }
@@ -58,6 +59,9 @@ namespace Euler
 
         public string toStringWolframAlpha()
         {
+            if (n == 0)
+                return "";
+
             string output = "{";
 
             for (int i = 0; i < n; i++)
@@ -77,6 +81,9 @@ namespace Euler
 
         public string toStringMatlab()
         {
+            if (n == 0)
+                return "";
+
             string output = "[";
 
             for (int i = 0; i < n; i++)
@@ -344,6 +351,101 @@ namespace Euler
                 output += "\n\nThis is not the only dominant Eigen Vector.";
 
             return output;
+        }
+
+        public string getEigenValueString()
+        {
+            double eigenValue = this.getEigenValue();
+
+            return string.Format("{0:0.000}", eigenValue) + "\n";
+        }
+
+        public Bitmap makeMatrixImage()
+        {
+            Form form = new Form();
+            Graphics GFX;
+            Bitmap matrixImg;
+            Bitmap matrExport;
+            int[,] matrix = this.matrix;
+            String power = "1";
+
+            int maxNumLen;
+            int n = (int)Math.Sqrt(matrix.Length);
+            if (n == 0)
+                return null;
+
+            // Find the largest number in the matrix, then calculate how many digits it contains
+            int maxNum = 0;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (matrix[i, j] > maxNum)
+                        maxNum = matrix[i, j];
+                }
+            }
+
+            if (maxNum == 0)
+                maxNumLen = 1;
+            else
+                maxNumLen = (int)(Math.Log10((maxNum + 1) * 1.0) + 1);
+
+            matrixImg = new Bitmap(60 + (30 + 5 * (maxNumLen - 1)) * n, 60 + 30 * n);
+            form.Size = new System.Drawing.Size(130 + (30 + 5 * (maxNumLen - 1)) * n, 110 + 30 * n);
+            GFX = Graphics.FromImage(matrixImg);
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    GFX.DrawString("" + matrix[i, j], new Font("Ariel", 10),
+                                   new SolidBrush(Color.Black), new Point(47 + j * (30 + 5 * (maxNumLen - 1)), 42 + i * 30));
+                }
+            }
+
+            // Left-side matrix notation
+            Point start = new Point(30, 50);
+            Point end = new Point(30, 20 + n * 30);
+            GFX.DrawLine(new Pen(new SolidBrush(Color.Black), 3), start, end);
+
+            GFX.DrawArc(new Pen(new SolidBrush(Color.Black), 3),
+                        new Rectangle(start.X, start.Y - 20, 20, 40),
+                        180, 90);
+            GFX.DrawArc(new Pen(new SolidBrush(Color.Black), 3),
+                        new Rectangle(end.X, end.Y - 21, 20, 40),
+                        90, 90);
+
+            // Right-side matrix notation
+            start = new Point(48 + n * (30 + 5 * (maxNumLen - 1)), 50);
+            end = new Point(48 + n * (30 + 5 * (maxNumLen - 1)), 20 + n * 30);
+            GFX.DrawLine(new Pen(new SolidBrush(Color.Black), 3), start, end);
+
+            GFX.DrawArc(new Pen(new SolidBrush(Color.Black), 3),
+                        new Rectangle(start.X - 20, start.Y - 20, 20, 40),
+                        270, 90);
+            GFX.DrawArc(new Pen(new SolidBrush(Color.Black), 3),
+                        new Rectangle(end.X - 20, end.Y - 21, 20, 40),
+                        360, 90);
+
+            Graphics showM = form.CreateGraphics();
+            showM.DrawString("A   = ", new Font("Arial", 16), new SolidBrush(Color.Black), 10, (form.Height / 2 - 30));
+            if (Convert.ToDecimal(power) != 1)
+                showM.DrawString(power, new Font("Arial", 10), new SolidBrush(Color.Black), 25, (form.Height / 2 - 37));
+            showM.DrawImage(matrixImg, 40, 0);
+
+
+            // Create a new Bitmap that has both the matrix and its label (A^x = )
+            matrExport = new Bitmap(130 + (30 + 5 * (maxNumLen - 1)) * n, 110 + 30 * n);
+            Graphics export = Graphics.FromImage(matrExport);
+            export.DrawString("A   = ", new Font("Arial", 16), new SolidBrush(Color.Black), 10, (form.Height / 2 - 30));
+
+            // Do not put power if it is just 1
+            if (Convert.ToDecimal(power) != 1)
+                export.DrawString(power, new Font("Arial", 10), new SolidBrush(Color.Black), 25, (form.Height / 2 - 37));
+
+            export.DrawImage(matrixImg, 40, 0);
+
+
+            return matrExport;  // Bitmap of the matrix AND label
         }
     }
 }

@@ -13,6 +13,28 @@ namespace Euler
 {
     public partial class MainForm : Form
     {
+        // Graph editing mode constants
+        private const int 
+            SELECT_MOVE   = 0, 
+            ADD_VERTEX    = 1, 
+            DELETE_VERTEX = 2, 
+            ADD_EDGE      = 3,  
+            DELETE_EDGE   = 4, 
+            SELECT_AREA   = 5,
+            ADD_DIRECTED  = 6;
+        // Adjacency matrix output constants
+        private const int 
+            BASIC_ADJ     = 10, 
+            WOLFRAM_ADJ   = 11, 
+            MATLAB_ADJ    = 12, 
+            IMAGE_ADJ     = 13;
+        // Graph analysis output constants
+        private const int 
+            POWER_ADJ     = 20, 
+            EIGEN_VEC     = 21, 
+            EIGEN_VAL     = 22;
+
+        // Main form's constructor
         public MainForm()
         {
             InitializeComponent();
@@ -24,14 +46,14 @@ namespace Euler
             propertyGrid1.PropertyValueChanged += new PropertyValueChangedEventHandler(propertyGrid1_PropertyValueChanged);
             
             graph = new Graph();
-            editMode = 0;
+            editMode = SELECT_MOVE;
 
-            comboBox1.SelectedIndex = 1;
-            selectedOutput = 0;
+            comboBoxAdjPower.SelectedIndex = 1;
+            selectedOutput = BASIC_ADJ;
             graphCursor = Cursors.Arrow;
             label2.Text = "Properties for Graph";
             propertyGrid1.SelectedObject = graph;
-            toolStripStatusLabel1.Text = "Ready";
+            toolStripStatusLabelBottomLeftHint.Text = "Ready";
             toolStripStatusLabel3.Text = "";
             showButtonInUse(toolStripButtonSelectMoveVertex);
             toolTip1.Active = true;
@@ -65,14 +87,14 @@ namespace Euler
         void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
             toolStripStatusLabel3.Text = "(" + e.X + ", " + e.Y + ")";
-            if (editMode == 1 && !graph.enoughRoom(e.X, e.Y))
+            if (editMode == ADD_VERTEX && !graph.enoughRoom(e.X, e.Y))
             {
                 Cursor = Cursors.No;
             }
             else
                 Cursor = graphCursor;
 
-            if (editMode == 0 
+            if (editMode == SELECT_MOVE 
                 && e.Button == MouseButtons.Left 
                 && selected != null
                 && e.X - selected.Radius > 0 && e.X + selected.Radius < pictureBox1.Width
@@ -88,7 +110,7 @@ namespace Euler
                     Cursor = Cursors.No;
                 printGraph();
             }
-            else if ((editMode == 0 || editMode == 2) 
+            else if ((editMode == SELECT_MOVE || editMode == ADD_EDGE) 
                 && e.Button != MouseButtons.Left 
                 && e.X > 0 && e.X < pictureBox1.Width 
                 && e.Y > 0 && e.Y < pictureBox1.Height)
@@ -107,13 +129,13 @@ namespace Euler
                     toolTip1.Active = false;
             }
 
-            if (editMode == 2 || editMode == 3)
+            if (editMode == ADD_EDGE || editMode == DELETE_EDGE)
             {
                 if (graph.getVertex(e.X, e.Y) != null)
                     Cursor = Cursors.Cross;
             }
 
-            if (editMode == 4
+            if (editMode == SELECT_AREA
                 && e.Button == MouseButtons.Left
                 && e.X > 0 && e.X < pictureBox1.Width
                 && e.Y > 0 && e.Y < pictureBox1.Height)
@@ -128,38 +150,38 @@ namespace Euler
         {
             if (e.Button == MouseButtons.Right)
             {
-                contextMenuStrip1.Items.Clear();
+                contextMenuStripRightClickPictureBox.Items.Clear();
                 selected = graph.getVertex(e.X, e.Y);
                 if (selected == null)
                 {
-                    contextMenuStrip1.Items.Add(copyGraphImageToolStripMenuItem);
+                    contextMenuStripRightClickPictureBox.Items.Add(copyGraphImageToolStripMenuItem);
                 }
                 else
                 {
                     deleteToolStripMenuItem.Text = "Delete " + selected.Name;
-                    contextMenuStrip1.Items.Add(deleteToolStripMenuItem);
-                    contextMenuStrip1.Items.Add(copyGraphImageToolStripMenuItem);
+                    contextMenuStripRightClickPictureBox.Items.Add(deleteToolStripMenuItem);
+                    contextMenuStripRightClickPictureBox.Items.Add(copyGraphImageToolStripMenuItem);
                 }
 
-                if (editMode == 4)
+                if (editMode == SELECT_AREA)
                 {
                     if (graphImageDomain.Size.Width != 0 || graphImageDomain.Size.Height != 0)
-                        contextMenuStrip1.Items.Add(copyGraphImageSubsectionToolStripMenuItem);
+                        contextMenuStripRightClickPictureBox.Items.Add(copyGraphImageSubsectionToolStripMenuItem);
                 }
-                contextMenuStrip1.Show(pictureBox1.PointToScreen(e.Location));
+                contextMenuStripRightClickPictureBox.Show(pictureBox1.PointToScreen(e.Location));
             }
 
             else if (e.Button == MouseButtons.Left)
             {
                 switch (editMode)
                 {
-                    case (0):
+                    case (SELECT_MOVE):
                         selected = graph.getVertex(e.X, e.Y);
                         if(selected != null)
                             Cursor.Position = pictureBox1.PointToScreen(selected.Location);
                         printGraph();
                         break;
-                    case (1):
+                    case (ADD_VERTEX):
                         if(graph.enoughRoom(e.X, e.Y))
                         {
                             graph.addVertex(new Vertex(e.X, e.Y, graph));
@@ -168,11 +190,18 @@ namespace Euler
                         resetMatrixTextBoxes();
                         printGraph();
                         break;
-                    case (2):
+                    case (DELETE_VERTEX):
+                        selected = graph.getVertex(e.X, e.Y);
+                        graph.removeVertex(selected);
+                        selected = null;
+                        resetMatrixTextBoxes();
+                        printGraph();
+                        break;
+                    case (ADD_EDGE):
                         if (selected == null)
                         {
                             selected = graph.getVertex(e.X, e.Y);
-                            toolStripStatusLabel1.Text = "Add edge: Now click on the vertex you wish to add as a neighbor.";
+                            toolStripStatusLabelBottomLeftHint.Text = "Add edge: Now click on the vertex you wish to add as a neighbor.";
 
                             printGraph();
                         }
@@ -193,14 +222,41 @@ namespace Euler
                                 selected = null;
                                 printGraph();
                             }
-                            toolStripStatusLabel1.Text = "Add edge: Click on the vertex that you want to add an edge to.";
+                            toolStripStatusLabelBottomLeftHint.Text = "Add edge: Click on the vertex that you want to add an edge to.";
                         }
                         break;
-                    case (3):
+                    case (ADD_DIRECTED):
                         if (selected == null)
                         {
                             selected = graph.getVertex(e.X, e.Y);
-                            toolStripStatusLabel1.Text = "Delete edge: Now click on the vertex you wish to remove as a neighbor.";
+                            toolStripStatusLabelBottomLeftHint.Text = "Add edge: Now click on the vertex you wish to add as a neighbor.";
+
+                            printGraph();
+                        }
+                        else
+                        {
+                            Vertex secondVertex = graph.getVertex(e.X, e.Y);
+                            if (secondVertex != null)
+                            {
+                                selected.addNeighbor(secondVertex);
+                                selected = null;
+
+                                resetMatrixTextBoxes();
+                                printGraph();
+                            }
+                            else
+                            {
+                                selected = null;
+                                printGraph();
+                            }
+                            toolStripStatusLabelBottomLeftHint.Text = "Add edge: Click on the vertex that you want to add an edge to.";
+                        }
+                        break;
+                    case (DELETE_EDGE):
+                        if (selected == null)
+                        {
+                            selected = graph.getVertex(e.X, e.Y);
+                            toolStripStatusLabelBottomLeftHint.Text = "Delete edge: Now click on the vertex you wish to remove as a neighbor.";
                             printGraph();
                         }
                         else
@@ -220,10 +276,10 @@ namespace Euler
                                 selected = null;
                                 printGraph();
                             }
-                            toolStripStatusLabel1.Text = "Delete edge: Click on the vertex you want to remove the edge from.";
+                            toolStripStatusLabelBottomLeftHint.Text = "Delete edge: Click on the vertex you want to remove the edge from.";
                         }
                         break;
-                    case(4):
+                    case(SELECT_AREA):
                         clickPoint = e.Location;
                         graphImageDomain.Size = new Size(0, 0);
                         break;
@@ -302,7 +358,7 @@ namespace Euler
             }
 
             // If edit mode is Select Area
-            if (editMode == 4)
+            if (editMode == SELECT_AREA)
             {
                 Pen dashed = new Pen(Color.Black, 1);
                 dashed.DashPattern = new float[]{2f, 2f};
@@ -318,20 +374,28 @@ namespace Euler
 
             switch (selectedOutput)
             {
-                case(0):
+                case(BASIC_ADJ):
                     richTextBoxBasic.Text = adjacencyMatrix.toStringBasic();
                     break;
-                case(1):
+                case(WOLFRAM_ADJ):
                     richTextBoxWolframAlpha.Text = adjacencyMatrix.toStringWolframAlpha();
                     break;
-                case(2):
+                case(MATLAB_ADJ):
                     richTextBoxMatlab.Text = adjacencyMatrix.toStringMatlab();
                     break;
-                case(3):
-                    richTextBoxPower.Text = adjacencyMatrix.toThePower(comboBox1.SelectedIndex + 1).toStringBasic();
+                case(POWER_ADJ):
+                    richTextBoxPower.Text = adjacencyMatrix.toThePower(comboBoxAdjPower.SelectedIndex + 1).toStringBasic();
+                    break;
+                case(EIGEN_VEC):
+                    richTextBoxEigenVector.Text = adjacencyMatrix.getEigenVectorString();
+                    break;
+                case(EIGEN_VAL):
+                    richTextBoxEigenValue.Text = adjacencyMatrix.getEigenValueString();
+                    break;
+                case(IMAGE_ADJ):
+                    pictureBox2.Image = adjacencyMatrix.makeMatrixImage();
                     break;
                 default:
-                    richTextBoxEigenVector.Text = adjacencyMatrix.getEigenVectorString();
                     break;
             }
             
@@ -341,8 +405,8 @@ namespace Euler
         {
             graphCursor = Cursors.Arrow;
             showButtonInUse(toolStripButtonSelectMoveVertex);
-            toolStripStatusLabel1.Text = "Ready";
-            editMode = 0;
+            toolStripStatusLabelBottomLeftHint.Text = "Ready";
+            editMode = SELECT_MOVE;
             propertyGrid1.SelectedObject = graph;
             label2.Text = "Properties for Graph";
             resetMatrixTextBoxes();
@@ -372,12 +436,11 @@ namespace Euler
         private int selectedOutput;
         private Rectangle graphImageDomain;
         private Point clickPoint;
-        private int currentExponent;
 
         private void showButtonInUse(ToolStripButton b)
         {
             b.BackColor = Color.LightBlue;
-            foreach (ToolStripButton tsb in toolStrip1.Items)
+            foreach (ToolStripButton tsb in toolStripGraphTools.Items)
             {
                 if (tsb != b)
                 {
@@ -390,24 +453,25 @@ namespace Euler
         {
             graphCursor = Cursors.Arrow;
             showButtonInUse(toolStripButtonSelectMoveVertex);
-            toolStripStatusLabel1.Text = "Ready";
-            editMode = 0;
+            toolStripStatusLabelBottomLeftHint.Text = "Ready";
+            editMode = SELECT_MOVE;
         }
 
         private void toolStripButtonAddVertex_Click(object sender, EventArgs e)
         {
             graphCursor = Cursors.Cross;
             showButtonInUse(toolStripButtonAddVertex);
-            toolStripStatusLabel1.Text = "Add vertices to graph";
-            editMode = 1;
+            toolStripStatusLabelBottomLeftHint.Text = "Add vertices to graph";
+            editMode = ADD_VERTEX;
         }
 
         private void toolStripButtonDeleteVertex_Click(object sender, EventArgs e)
         {
-            if (selected != null)
-            {
-                graph.removeVertex(selected);
-            }
+            graphCursor = Cursors.Arrow;
+            selected = null;
+            showButtonInUse(toolStripButtonDeleteVertex);
+            toolStripStatusLabelBottomLeftHint.Text = "Delete Vertex: Click on the vertex that you want to remove.";
+            editMode = DELETE_VERTEX;
         }
 
         private void toolStripButtonAddEdge_Click(object sender, EventArgs e)
@@ -415,8 +479,8 @@ namespace Euler
             graphCursor = Cursors.Arrow;
             selected = null;
             showButtonInUse(toolStripButtonAddEdge);
-            toolStripStatusLabel1.Text = "Add edge: Click on the vertex that you want to add an edge to.";
-            editMode = 2;
+            toolStripStatusLabelBottomLeftHint.Text = "Add edge: Click on the vertex that you want to add an edge to.";
+            editMode = ADD_EDGE;
         }
 
         private void toolStripButtonDeleteEdge_Click(object sender, EventArgs e)
@@ -424,8 +488,17 @@ namespace Euler
             graphCursor = Cursors.Arrow;
             selected = null;
             showButtonInUse(toolStripButtonDeleteEdge);
-            toolStripStatusLabel1.Text = "Delete edge: Click on the vertex you want to remove the edge from.";
-            editMode = 3;
+            toolStripStatusLabelBottomLeftHint.Text = "Delete edge: Click on the vertex you want to remove the edge from.";
+            editMode = DELETE_EDGE;
+        }
+
+        private void toolStripButtonAddEdgeDirected_Click(object sender, EventArgs e)
+        {
+            graphCursor = Cursors.Arrow;
+            selected = null;
+            showButtonInUse(toolStripButtonAddEdgeDirected);
+            toolStripStatusLabelBottomLeftHint.Text = "Add edge: Click on the vertex that you want to add an edge to.";
+            editMode = ADD_DIRECTED;
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -475,6 +548,34 @@ namespace Euler
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             selectedOutput = tabControl1.SelectedIndex;
+
+            switch (tabControl1.SelectedIndex)
+            {
+                case 0:
+                    selectedOutput = BASIC_ADJ;
+                    break;
+                case 1:
+                    selectedOutput = WOLFRAM_ADJ;
+                    break;
+                case 2:
+                    selectedOutput = MATLAB_ADJ;
+                    break;
+                case 3:
+                    selectedOutput = POWER_ADJ;
+                    break;
+                case 4:
+                    selectedOutput = EIGEN_VEC;
+                    break;
+                case 5:
+                    selectedOutput = EIGEN_VAL;
+                    break;
+                case 6:
+                    selectedOutput = IMAGE_ADJ;
+                    break;
+                default:
+                    break;
+
+            }
             resetMatrixTextBoxes();
         }
 
@@ -497,9 +598,9 @@ namespace Euler
             graphCursor = Cursors.Arrow;
             selected = null;
             showButtonInUse(toolStripButtonSelectArea);
-            toolStripStatusLabel1.Text = "Select a section of the graph image.";
+            toolStripStatusLabelBottomLeftHint.Text = "Select a section of the graph image.";
             graphImageDomain = new Rectangle();
-            editMode = 4;
+            editMode = SELECT_AREA;
         }
 
         private void copyGraphImageSubsectionToolStripMenuItem_Click(object sender, EventArgs e)
