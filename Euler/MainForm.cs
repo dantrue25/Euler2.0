@@ -321,9 +321,24 @@ namespace Euler
             {
                 foreach (Vertex n in v.Neighbors)
                 {
+                    // Loop to itself
                     if (v.Equals(n))
                         graphics.DrawEllipse(new Pen(graph.EdgeColor, graph.EdgeWidth), (int) (v.X - 2.8 * v.Radius), (int) (v.Y - 2.8 * v.Radius), 3 * v.Radius, 3 * v.Radius);
-                    graphics.DrawLine(new Pen(graph.EdgeColor, graph.EdgeWidth), v.Location, n.Location);
+                    
+                    // Directed
+                    if (!n.Neighbors.Contains(v))
+                    {
+                        Pen regularPen = new Pen(graph.EdgeColor, graph.EdgeWidth);
+                        Pen arrowPen = new Pen(graph.EdgeColor, graph.ArrowSize);
+                        arrowPen.EndCap = LineCap.ArrowAnchor;
+                        graphics.DrawLine(regularPen, v.Location, getLocationForDirectedEdge(v.Location, n.Location, n.Radius + graph.ArrowSize));
+                        graphics.DrawLine(arrowPen, getLocationForDirectedEdge(v.Location, n.Location, n.Radius + graph.ArrowSize), getLocationForDirectedEdge(v.Location, n.Location, n.Radius));
+                    }
+                    // Undirected
+                    else
+                    {
+                        graphics.DrawLine(new Pen(graph.EdgeColor, graph.EdgeWidth), v.Location, n.Location);
+                    }
                 }
             }
 
@@ -366,6 +381,42 @@ namespace Euler
             }
 
             pictureBox1.Image = graphImage;
+        }
+
+        private Point getLocationForDirectedEdge(Point start, Point end, int radius)
+        {
+            double width, height;
+            width = end.X - start.X;
+            height = -(end.Y - start.Y);
+
+            double newHypotenuse = Math.Sqrt(Math.Pow(width, 2) + Math.Pow(height, 2)) - radius;
+
+            double angle = Math.Atan(height / width);
+
+            Point arrowPoint = new Point();
+
+            if (width < 0 && height <= 0)
+            {
+                arrowPoint.X = (int)(start.X - newHypotenuse * Math.Cos(angle));
+                arrowPoint.Y = (int)(start.Y + newHypotenuse * Math.Sin(angle));
+            }
+            else if (width < 0 && height >= 0)
+            {
+                arrowPoint.X = (int)(start.X - newHypotenuse * Math.Cos(angle));
+                arrowPoint.Y = (int)(start.Y + newHypotenuse * Math.Sin(angle));
+            }
+            else if (width >= 0 && height <= 0)
+            {
+                arrowPoint.X = (int)(start.X + newHypotenuse * Math.Cos(angle));
+                arrowPoint.Y = (int)(start.Y - newHypotenuse * Math.Sin(angle));
+            }
+            else if (width >= 0 && height >= 0)
+            {
+                arrowPoint.X = (int)(start.X + newHypotenuse * Math.Cos(angle));
+                arrowPoint.Y = (int)(start.Y - newHypotenuse * Math.Sin(angle));
+            }
+
+            return arrowPoint;
         }
 
         private void resetMatrixTextBoxes()

@@ -51,6 +51,7 @@ namespace Euler
         private Font graphLabelFont = new Font(SystemFonts.DefaultFont.FontFamily, 24);
         private Color edgeColor = Color.Black;
         private int edgeWidth = 2;
+        private int arrowSize = 6;
 
         public string Name 
         {
@@ -62,6 +63,12 @@ namespace Euler
             {
                 name = value;
             }
+        }
+
+        public int ArrowSize
+        {
+            get { return arrowSize; }
+            set { arrowSize = value; }
         }
 
         public bool GraphLabelVisible
