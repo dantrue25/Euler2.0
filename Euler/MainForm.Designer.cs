@@ -360,7 +360,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(296, 203);
+            this.tabPage2.Size = new System.Drawing.Size(300, 204);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "WolframAlpha";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -370,7 +370,7 @@
             this.richTextBoxWolframAlpha.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBoxWolframAlpha.Location = new System.Drawing.Point(3, 3);
             this.richTextBoxWolframAlpha.Name = "richTextBoxWolframAlpha";
-            this.richTextBoxWolframAlpha.Size = new System.Drawing.Size(290, 197);
+            this.richTextBoxWolframAlpha.Size = new System.Drawing.Size(294, 198);
             this.richTextBoxWolframAlpha.TabIndex = 0;
             this.richTextBoxWolframAlpha.Text = "";
             // 
@@ -522,7 +522,7 @@
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage7.Size = new System.Drawing.Size(300, 204);
             this.tabPage7.TabIndex = 6;
-            this.tabPage7.Text = "tabPage7";
+            this.tabPage7.Text = "Adjacency Matrix Image";
             this.tabPage7.UseVisualStyleBackColor = true;
             // 
             // pictureBox2
@@ -630,7 +630,7 @@
             this.Controls.Add(this.statusStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "Euler 2.0";
+            this.Text = "Euler 3.1";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStripGraphTools.ResumeLayout(false);
